@@ -1,0 +1,101 @@
+---
+layout: post
+title: "First step with Vapor"
+date: 2018-12-28 12:22:00 +0100
+categories: [swift server]
+tags: [vapor]
+---
+
+![Vapor Logo](/assets/vapor.png)
+
+
+I recently had the oportunity to test Vapor.
+It is one of the most used a **Swift Web Framework** that used SwiftNIO. 
+Actually in version 3.1.0, it is compatible with macOS and Ubuntu. They have made a lot of change for this new version, and they almost totally re-write or update the documentation, which is now very good (it was one of the main issue of the previouses versions).
+
+After building a test project and testing some functionalities, one thing I can say is it is very easy and fast to create an API with Vapor. 
+So I think it is maybe the best entrance door for iOS developers who need to make an API and want to use the same language than their apps for their server. It also can be used for some quick prototypes, for example.
+And it seems that it is more and more used in production, as I can't compare with others servers technologies because I am not really an expert on this subject. But as an iOS developer, I can see the advantages of the usage of Vapor to build a server for my apps : 
+
+* We can share some classes.
+* We don't have to care about JSON parsing, thanks to ```Codable``` available since version 3.0.
+
+
+
+So here it is. All my tests were done on macOS.
+You can install vapor using Homebrew : 
+```
+brew install vapor/tap/vapor
+```
+
+Of course, it will require Swift at least to be installed on your Mac. I suggest you have Xcode to be installed to.
+
+After that, use these commands : 
+
+```bash
+// Create an project with base classes and some example code
+vapor new ProjectName
+
+// Make it an Xcode project 
+cd ProjectName
+vapor xcode
+```
+
+It generates a ready-to-start example project with an `.xcodeproj`file that you can easily open from Xcode.
+
+This project contains :
+
+* An SQLite database.
+* A Fluent model and its associated Controller.
+* Some routing examples in `routes.swift` file.
+* The file `configure.swift` contains all the settings and the services that will be used in the Application.
+* The `boot.swift` file is empty, but should be used for all the setup that need to be done after the Application has initialized.
+* Because it used [Swift Package Manager](https://swift.org/package-manager/), there is a `Package.swift` file.
+
+With all this, you can already run th `Run` target on Xcode and start testing the routes listed in `routes.swift`, using `http://localhost:8080` as root url, it works ! 
+
+### Functionalities
+
+I list here what I think to be the main advantages to use Vapor instead of an other server technology. Most of them have been added on version 3.0.
+
+* It used a dependency injection framework called the **Services**. Databases, middlewares, providers and even router are all services of the Vapor application. So if you prefer to use PostgreSQL instead of SQLite for example, it's easy to replace. 
+
+* Since 3.0, Vapor works on a **asynchronous system**. It is possible because of the usage of the Swift language. On each core of the CPU it is running on, will be associated an *event loop*. All communication between clients and server will happen on the event loop the client has been associated with. Vapor can handle multiple requests on each event loop asynchronously. To interact with the event loop, we use `Workers`, and the most commons that you will use with Vapor are `Application`, `Request` and `Response`. That's why there is a critical rule to respect : never make blocking call on an event loop. For that we need to use `Future` and `Promise`, already implemented in Vapor base package.
+
+* The **Controllers** are used to *delegate* the operations asked by a routing request, and return a result. I should take a `Request` object as a parameter, and it will generally return a result inside a `Future`.
+
+Example : 
+
+```swift
+final class HelloController {
+    func greet(_ req: Request) throws -> String {
+        return "Hello world!"
+    }
+    
+    // Wait for an encoded Hello on the content request and save it on DB
+    func create(_ req: Request) throws -> Future<Hello> {
+        return try req.content.decode(Hello.self).flatMap { hello in
+            return hello.save(on: req)
+        }
+    }
+}
+```
+
+And in our `routes.swift` :
+
+```swift
+public func routes(_ router: Router) throws {
+    let helloController = HelloController()
+    router.get("hello", use: helloController.greet)
+    router.post("hello", use: helloController.create)
+}
+```
+
+* If you want to use Vapor to make websites instead of API, you can use **Leaf**. It's a templating language, inspired by Swift syntax, that you can use to generate dynamic HTML pages.
+
+### More
+
+* **Documentation & Guide** : https://docs.vapor.codes/3.0/ and https://api.vapor.codes
+* **Official Vapor Discord** : http://discord.gg/BnXmVGA
+* **SwiftNIO GitHub** : https://github.com/apple/swift-nio
+
