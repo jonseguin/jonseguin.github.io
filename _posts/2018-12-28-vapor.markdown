@@ -6,12 +6,15 @@ categories: [swift server]
 tags: [vapor]
 ---
 
-![Vapor Logo](/assets/vapor.png)
-
-
 I recently had the oportunity to test Vapor.
 It is one of the most used a **Swift Web Framework** that used SwiftNIO. 
 Actually in version 3.1.0, it is compatible with macOS and Ubuntu. They have made a lot of change for this new version, and they almost totally re-write or update the documentation, which is now very good (it was one of the main issue of the previouses versions).
+
+<img src="/assets/vapor.png" alt="Vapor logo"
+	title="Vapor logo" style="display: block; margin-left: auto; margin-right: auto; width: 50%;" />
+
+
+### Setup
 
 After building a test project and testing some functionalities, one thing I can say is it is very easy and fast to create an API with Vapor. 
 So I think it is maybe the best entrance door for iOS developers who need to make an API and want to use the same language than their apps for their server. It also can be used for some quick prototypes, for example.
@@ -93,9 +96,9 @@ public func routes(_ router: Router) throws {
 
 * If you want to use Vapor to make websites instead of API, you can use **Leaf**. It's a templating language, inspired by Swift syntax, that you can use to generate dynamic HTML pages.
 
-### More
 
-* **Documentation & Guide** : https://docs.vapor.codes/3.0/ and https://api.vapor.codes
-* **Official Vapor Discord** : http://discord.gg/BnXmVGA
-* **SwiftNIO GitHub** : https://github.com/apple/swift-nio
+### Useful links
 
+* [Documentation](https://docs.vapor.codes/3.0/) & [Guide](https://api.vapor.codes)
+* [Official Vapor Discord](http://discord.gg/BnXmVGA)
+* [SwiftNIO GitHub](https://github.com/apple/swift-nio)

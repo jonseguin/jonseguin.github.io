@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-28T15:31:18+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jonathan Seguin</title><subtitle>A blog about Swift and iOS development.</subtitle><entry><title type="html">First step with Vapor</title><link href="http://localhost:4000/swift%20server/2018/12/28/vapor.html" rel="alternate" type="text/html" title="First step with Vapor" /><published>2018-12-28T12:22:00+01:00</published><updated>2018-12-28T12:22:00+01:00</updated><id>http://localhost:4000/swift%20server/2018/12/28/vapor</id><content type="html" xml:base="http://localhost:4000/swift%20server/2018/12/28/vapor.html">&lt;p&gt;&lt;img src=&quot;/assets/vapor.png&quot; alt=&quot;Vapor Logo&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I recently had the oportunity to test Vapor.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-28T16:02:00+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jonathan Seguin</title><subtitle>A blog about Swift and iOS development.</subtitle><entry><title type="html">First step with Vapor</title><link href="http://localhost:4000/swift%20server/2018/12/28/vapor.html" rel="alternate" type="text/html" title="First step with Vapor" /><published>2018-12-28T12:22:00+01:00</published><updated>2018-12-28T12:22:00+01:00</updated><id>http://localhost:4000/swift%20server/2018/12/28/vapor</id><content type="html" xml:base="http://localhost:4000/swift%20server/2018/12/28/vapor.html">&lt;p&gt;I recently had the oportunity to test Vapor.
 It is one of the most used a &lt;strong&gt;Swift Web Framework&lt;/strong&gt; that used SwiftNIO. 
 Actually in version 3.1.0, it is compatible with macOS and Ubuntu. They have made a lot of change for this new version, and they almost totally re-write or update the documentation, which is now very good (it was one of the main issue of the previouses versions).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/vapor.png&quot; alt=&quot;Vapor logo&quot; title=&quot;Vapor logo&quot; style=&quot;display: block; margin-left: auto; margin-right: auto; width: 50%;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;
 
 &lt;p&gt;After building a test project and testing some functionalities, one thing I can say is it is very easy and fast to create an API with Vapor. 
 So I think it is maybe the best entrance door for iOS developers who need to make an API and want to use the same language than their apps for their server. It also can be used for some quick prototypes, for example.
@@ -90,10 +92,10 @@ vapor xcode
   &lt;li&gt;If you want to use Vapor to make websites instead of API, you can use &lt;strong&gt;Leaf&lt;/strong&gt;. It’s a templating language, inspired by Swift syntax, that you can use to generate dynamic HTML pages.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;more&quot;&gt;More&lt;/h3&gt;
+&lt;h3 id=&quot;useful-links&quot;&gt;Useful links&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Documentation &amp;amp; Guide&lt;/strong&gt; : https://docs.vapor.codes/3.0/ and https://api.vapor.codes&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Official Vapor Discord&lt;/strong&gt; : http://discord.gg/BnXmVGA&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;SwiftNIO GitHub&lt;/strong&gt; : https://github.com/apple/swift-nio&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="vapor" /><summary type="html"></summary></entry></feed>
+  &lt;li&gt;&lt;a href=&quot;https://docs.vapor.codes/3.0/&quot;&gt;Documentation&lt;/a&gt; &amp;amp; &lt;a href=&quot;https://api.vapor.codes&quot;&gt;Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://discord.gg/BnXmVGA&quot;&gt;Official Vapor Discord&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/apple/swift-nio&quot;&gt;SwiftNIO GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="vapor" /><summary type="html">I recently had the oportunity to test Vapor. It is one of the most used a Swift Web Framework that used SwiftNIO. Actually in version 3.1.0, it is compatible with macOS and Ubuntu. They have made a lot of change for this new version, and they almost totally re-write or update the documentation, which is now very good (it was one of the main issue of the previouses versions).</summary></entry></feed>
