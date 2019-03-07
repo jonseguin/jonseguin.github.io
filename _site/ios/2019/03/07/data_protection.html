@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>iOS Data protection | Jonathan Seguin</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iOS Data protection" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research." />
+<meta property="og:description" content="I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research." />
+<link rel="canonical" href="http://localhost:4000/ios/2019/03/07/data_protection.html" />
+<meta property="og:url" content="http://localhost:4000/ios/2019/03/07/data_protection.html" />
+<meta property="og:site_name" content="Jonathan Seguin" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-03-07T11:07:00+01:00" />
+<script type="application/ld+json">
+{"description":"I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research.","@type":"BlogPosting","url":"http://localhost:4000/ios/2019/03/07/data_protection.html","headline":"iOS Data protection","dateModified":"2019-03-07T11:07:00+01:00","datePublished":"2019-03-07T11:07:00+01:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ios/2019/03/07/data_protection.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Jonathan Seguin" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Jonathan Seguin</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">iOS Data protection</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-03-07T11:07:00+01:00" itemprop="datePublished">Mar 7, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research.</p>
+
+<ul>
+  <li>The device password is the encryption key. So it is the <em>limit</em> of the protection : who knows the device password can potentially access all the files of all the apps.</li>
+  <li>When we connect a device to a Mac we gave the trust to, the data protection is totally disabled while connected. The <em>trust</em> is necessary to give if you want to plug a device for iTunes access or to build your Xcode project on it.</li>
+  <li>The data protection is not compatible with the files we want to synchronize with iCloud. There is also some interesting security matter about this functionality, that I will talk about in the next paragraph.</li>
+  <li>There is 4 levels of data protection.</li>
+  <li>When an user enable a password on its device, all apps has the <strong>Complete until first user authentication</strong> protection level since iOS 7. This protection makes the files to be encrypted until the first time the user authenticate after the user reboot or shut down his device.</li>
+  <li>We can enable a custom level for our app by enabling “Data Protection” entitlement. By default, the level will be set to <strong>Complete</strong>, which make the files to be accessible only when the device is unlocked, but we can set it to the value we want on the entitlement file.</li>
+  <li>There is two more protection levels :
+    <ul>
+      <li><strong>No protection</strong> which make the files always accessibles, and</li>
+      <li><strong>Complete unless open</strong> which is special case where you have to handle an access to a file already open after the device has been locked.</li>
+    </ul>
+  </li>
+  <li>An interesting functionality is taht we can setup manually the protection level for each file we save on the files system, no matter what has been set on the entitlements. A good practice is to setup the level we want to a directory, that therefore will be apply to all the files on it.</li>
+</ul>
+
+<p>Here is an exemple where we set the <strong>complete</strong> protection level to a directory named <em>SecureDirectory</em> :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let secureDocumentDirectory = try FileManager.default.url(
+	for: .documentDirectory, 
+	in: .userDomainMask, 
+	appropriateFor: nil, 
+	create: false
+).appendingPathComponent("SecureDirectory")
+
+try FileManager.default.createDirectory(
+	at: secureDocumentDirectory, 
+	withIntermediateDirectories: false, 
+	attributes: [
+		FileAttributeKey.protectionKey: 
+		FileProtectionType.complete
+	]
+)
+</code></pre></div></div>
+
+<ul>
+  <li>For the <strong>Complete</strong> and <strong>Complete unless open</strong> protection levels, you will have to handle the cases when files are accessed during backgrounds operations. You may need to implement <code class="highlighter-rouge">applicationProtectedDataWillBecomeUnavailable(_:)</code> and <code class="highlighter-rouge">applicationProtectedDataDidBecomeAvailable(_:)</code> methods on your app delegate.</li>
+</ul>
+
+<p>Here is some interesting links I use for my research on this matter :</p>
+
+<ul>
+  <li><a href="https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/encrypting_your_app_s_files">The Apple official document about the Data Protection</a></li>
+  <li><a href="https://www.apple.com/business/site/docs/iOS_Security_Guide.pdf">An official Apple document</a> on everything that concerns security on a iOS device.</li>
+  <li><a href="http://www.ilounge.com/index.php/articles/comments/ios-encryption-and-data-protection/#1z6VYpREIyuyxLC2.99">An old but detailed blog post</a> about this subject</li>
+  <li><a href="https://developer.apple.com/videos/play/wwdc2011/208">WWDC 2011 - Securing Application Data</a></li>
+</ul>
+
+<h3 id="files-access-and-backup">Files access and backup</h3>
+
+<p>The iOS backup functionality can be used with iTunes and other third party softwares, via iCloud or manually.
+By default, all the files of an app are automatically backed up, except the bundle itself, the cache directory and the temp directory.
+All the others files are included in the backup, and maybe you don’t want that to be possible (it could be a database file or some pictures files you don’t want to be spread).
+To do that, all you have to do is to specify the resource value <code class="highlighter-rouge">isExcludedFromBackupKey</code> to the NSURL of the file or the directory.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>try (secureDocumentDirectory as NSURL)
+	.setResourceValue(true, forKey: .isExcludedFromBackupKey)
+</code></pre></div></div>
+<p>You can look for more information on the <a href="https://developer.apple.com/icloud/documentation/data-storage/index.html">Apple Documentation about the data storage</a>.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>Here we discussed about two important points when we want to <em>restrict</em> access to the files used by our app. Despite the fact that these point are not well known and the documentation could be confusing, I think it is important for all iOS developers to take this into account before releasing an app that can have sensitive data stored in the file system. I hope what I wrote here can be of any help.</p>
+
+  </div><a class="u-url" href="/ios/2019/03/07/data_protection.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Jonathan Seguin</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Jonathan Seguin</li><li><a class="u-email" href="mailto:djo.seguin@gmail.com">djo.seguin@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/jonseguin"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">jonseguin</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about Swift and iOS development.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

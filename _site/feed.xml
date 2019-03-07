@@ -1,4 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2018-12-28T16:24:30+01:00</updated><id>/feed.xml</id><title type="html">Jonathan Seguin</title><subtitle>A blog about Swift and iOS development.</subtitle><entry><title type="html">First step with Vapor</title><link href="/swift%20server/2018/12/28/vapor.html" rel="alternate" type="text/html" title="First step with Vapor" /><published>2018-12-28T12:22:00+01:00</published><updated>2018-12-28T12:22:00+01:00</updated><id>/swift%20server/2018/12/28/vapor</id><content type="html" xml:base="/swift%20server/2018/12/28/vapor.html">&lt;p&gt;I recently had the oportunity to test Vapor.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-03-07T16:28:34+01:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Jonathan Seguin</title><subtitle>A blog about Swift and iOS development.</subtitle><entry><title type="html">iOS Data protection</title><link href="http://localhost:4000/ios/2019/03/07/data_protection.html" rel="alternate" type="text/html" title="iOS Data protection" /><published>2019-03-07T11:07:00+01:00</published><updated>2019-03-07T11:07:00+01:00</updated><id>http://localhost:4000/ios/2019/03/07/data_protection</id><content type="html" xml:base="http://localhost:4000/ios/2019/03/07/data_protection.html">&lt;p&gt;I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The device password is the encryption key. So it is the &lt;em&gt;limit&lt;/em&gt; of the protection : who knows the device password can potentially access all the files of all the apps.&lt;/li&gt;
+  &lt;li&gt;When we connect a device to a Mac we gave the trust to, the data protection is totally disabled while connected. The &lt;em&gt;trust&lt;/em&gt; is necessary to give if you want to plug a device for iTunes access or to build your Xcode project on it.&lt;/li&gt;
+  &lt;li&gt;The data protection is not compatible with the files we want to synchronize with iCloud. There is also some interesting security matter about this functionality, that I will talk about in the next paragraph.&lt;/li&gt;
+  &lt;li&gt;There is 4 levels of data protection.&lt;/li&gt;
+  &lt;li&gt;When an user enable a password on its device, all apps has the &lt;strong&gt;Complete until first user authentication&lt;/strong&gt; protection level since iOS 7. This protection makes the files to be encrypted until the first time the user authenticate after the user reboot or shut down his device.&lt;/li&gt;
+  &lt;li&gt;We can enable a custom level for our app by enabling “Data Protection” entitlement. By default, the level will be set to &lt;strong&gt;Complete&lt;/strong&gt;, which make the files to be accessible only when the device is unlocked, but we can set it to the value we want on the entitlement file.&lt;/li&gt;
+  &lt;li&gt;There is two more protection levels :
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;No protection&lt;/strong&gt; which make the files always accessibles, and&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Complete unless open&lt;/strong&gt; which is special case where you have to handle an access to a file already open after the device has been locked.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;An interesting functionality is taht we can setup manually the protection level for each file we save on the files system, no matter what has been set on the entitlements. A good practice is to setup the level we want to a directory, that therefore will be apply to all the files on it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here is an exemple where we set the &lt;strong&gt;complete&lt;/strong&gt; protection level to a directory named &lt;em&gt;SecureDirectory&lt;/em&gt; :&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;let secureDocumentDirectory = try FileManager.default.url(
+	for: .documentDirectory, 
+	in: .userDomainMask, 
+	appropriateFor: nil, 
+	create: false
+).appendingPathComponent(&quot;SecureDirectory&quot;)
+
+try FileManager.default.createDirectory(
+	at: secureDocumentDirectory, 
+	withIntermediateDirectories: false, 
+	attributes: [
+		FileAttributeKey.protectionKey: 
+		FileProtectionType.complete
+	]
+)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;For the &lt;strong&gt;Complete&lt;/strong&gt; and &lt;strong&gt;Complete unless open&lt;/strong&gt; protection levels, you will have to handle the cases when files are accessed during backgrounds operations. You may need to implement &lt;code class=&quot;highlighter-rouge&quot;&gt;applicationProtectedDataWillBecomeUnavailable(_:)&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;applicationProtectedDataDidBecomeAvailable(_:)&lt;/code&gt; methods on your app delegate.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here is some interesting links I use for my research on this matter :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/documentation/uikit/core_app/protecting_the_user_s_privacy/encrypting_your_app_s_files&quot;&gt;The Apple official document about the Data Protection&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apple.com/business/site/docs/iOS_Security_Guide.pdf&quot;&gt;An official Apple document&lt;/a&gt; on everything that concerns security on a iOS device.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ilounge.com/index.php/articles/comments/ios-encryption-and-data-protection/#1z6VYpREIyuyxLC2.99&quot;&gt;An old but detailed blog post&lt;/a&gt; about this subject&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developer.apple.com/videos/play/wwdc2011/208&quot;&gt;WWDC 2011 - Securing Application Data&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;files-access-and-backup&quot;&gt;Files access and backup&lt;/h3&gt;
+
+&lt;p&gt;The iOS backup functionality can be used with iTunes and other third party softwares, via iCloud or manually.
+By default, all the files of an app are automatically backed up, except the bundle itself, the cache directory and the temp directory.
+All the others files are included in the backup, and maybe you don’t want that to be possible (it could be a database file or some pictures files you don’t want to be spread).
+To do that, all you have to do is to specify the resource value &lt;code class=&quot;highlighter-rouge&quot;&gt;isExcludedFromBackupKey&lt;/code&gt; to the NSURL of the file or the directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;try (secureDocumentDirectory as NSURL)
+	.setResourceValue(true, forKey: .isExcludedFromBackupKey)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You can look for more information on the &lt;a href=&quot;https://developer.apple.com/icloud/documentation/data-storage/index.html&quot;&gt;Apple Documentation about the data storage&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Here we discussed about two important points when we want to &lt;em&gt;restrict&lt;/em&gt; access to the files used by our app. Despite the fact that these point are not well known and the documentation could be confusing, I think it is important for all iOS developers to take this into account before releasing an app that can have sensitive data stored in the file system. I hope what I wrote here can be of any help.&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">I recently had to search what kind of security exists and can be made to secure and restrict access to files saved on the files system of an app. I have found that the documentation can lead to bad understanding, so I decided to put here the result of my research.</summary></entry><entry><title type="html">First step with Vapor</title><link href="http://localhost:4000/swift%20server/2018/12/28/vapor.html" rel="alternate" type="text/html" title="First step with Vapor" /><published>2018-12-28T12:22:00+01:00</published><updated>2018-12-28T12:22:00+01:00</updated><id>http://localhost:4000/swift%20server/2018/12/28/vapor</id><content type="html" xml:base="http://localhost:4000/swift%20server/2018/12/28/vapor.html">&lt;p&gt;I recently had the oportunity to test Vapor.
 It is one of the most used a &lt;strong&gt;Swift Web Framework&lt;/strong&gt; that used SwiftNIO. 
 Actually in version 3.1.0, it is compatible with macOS and Ubuntu. They have made a lot of change for this new version, and they almost totally re-write or update the documentation, which is now very good (it was one of the main issue of the previouses versions).&lt;/p&gt;
 
